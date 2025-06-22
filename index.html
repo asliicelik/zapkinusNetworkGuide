@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Admin Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,50 0,100"/></svg>');
+            background-size: cover;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            background: rgba(44, 62, 80, 0.95);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .nav-item {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .issue-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .issue-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12, #e74c3c);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .issue-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .issue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .layer-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .issue-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .problem-section, .solution-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .problem-section {
+            border-left-color: #e74c3c;
+        }
+
+        .solution-section {
+            border-left-color: #27ae60;
+        }
+
+        .section-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-label::before {
+            content: '⚠️';
+        }
+
+        .solution-section .section-label::before {
+            content: '✅';
+        }
+
+        .download-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .pdf-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .pdf-btn:hover {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .issue-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 1rem 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+
+            header {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .issue-card {
+                padding: 1.5rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-item {
+                text-align: center;
+            }
+
+            .download-section {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .issue-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .issue-card:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .issue-card:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Network Admin Guide</h1>
+            <p class="subtitle">OSI Layers Troubleshooting Guide</p>
+        </header>
+
+        <nav>
+            <div class="nav-container">
+                <a href="#l1" class="nav-item">L1 - Cable/Port Issue</a>
+                <a href="#l12" class="nav-item">L1 - PC Network Adapter Off</a>
+                <a href="#l2" class="nav-item">L2 - VLAN Misconfiguration</a>
+                <a href="#l22" class="nav-item">L2 - GSBWiFi: Single Device Restriction via MAC-Based Access</a>
+                <a href="#l3" class="nav-item">L3 - Other Players Cannot Join the Lobby Due to Player Connecting to the Game via VPN</a>
+                <a href="#l32" class="nav-item">L3 - Protocol Incompatibility</a>
+                <a href="#l4" class="nav-item">L4 - UDP Flood</a>
+                <a href="#l5" class="nav-item">L5 - Session Synchronization Failures</a>
+                <a href="#l62" class="nav-item">L6 - Wi-Fi Encryption Incompatibility </a>
+                <a href="#l7" class="nav-item">L7 - The Threat of DNS Spoofing in Banking Applications</a>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div id="l1" class="issue-card">
+                <div class="layer-badge">LAYER 1</div>
+                <h2 class="issue-title">Cable/Port Issue</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>My computer starts up without any problems, but I can't see any network connection, and it won't connect to the internet. My friends are waiting for me in the game lobby, so I start troubleshooting. Suspecting the issue might be with the cable, I check the Ethernet cable and notice that the end of it is crushed. I guess my mom accidentally stepped on it or damaged it while cleaning, without noticing.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>I replaced the damaged Ethernet cable with a new one. After plugging in the new cable, the network connection was restored, and I was able to access the internet again.</p>
+                </div>
+                <div align="center">
+                <img src="Layer 1 Issue 1/ethernetcable.jpg" alt="Damaged Ethernet Cable" class="issue-image" style="max-width: 200px;"> </div>
+
+                <div class="download-section">
+                    <a href="Layer 1 Issue 1/L1_Physical_Layer_Cable_Issue.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 1 Issue 1/L1_Physical_Layer_Cable_Issue.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+         <div id="l12" class="issue-card">
+                <div class="layer-badge">LAYER 1</div>
+                <h2 class="issue-title">PC Network Adapter Off</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>During my internship at Halkbank, I connect the laptop given to me to the Ethernet cable at the company. However, I cannot access the internet. When I contact the IT department, they confirm that the cable is working, the switch port is active and the connection is physically strong. However, my computer still cannot connect to the network.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>SI went to Control Panel > Network and Sharing Center > Change Adapter Settings, right-clicked on the network adapter and selected "Enable". After this process, the computer was able to use the network hardware again and the internet connection was established.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 1 Issue 2/L1_PC_Network_Adapter_Off.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 1 Issue 2/L1_PC_Network_Adapter_Off.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+        </div>
+
+            <div id="l2" class="issue-card">
+                <div class="layer-badge">LAYER 2</div>
+                <h2 class="issue-title">VLAN Misconfiguration</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>The other day, a friend of mine from EEE department asked me for help because their newly installed computer couldn't connect to an old server in their lab. They said both devices were connected to the same switch, and the internet was working fine, but no matter what they tried, the new PC just couldn't reach the server — not even a ping.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>I offered to take a quick look, and when I checked the switch configuration, I noticed the server was assigned to VLAN 20 while the new PC was in VLAN 10. That's when I explained to them that even though both devices were plugged into the same switch, VLANs create separate virtual networks, so their data can't reach each other without proper routing.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 2 Issue 1/L2_problematic_vlan.pkt" download class="download-btn">
+                        📥 Problematic VLAN (.pkt)
+                    </a>
+                    <a href="Layer 2 Issue 1/L2_resolved_vlan.pkt" download class="download-btn">
+                        📥 Resolved VLAN (.pkt)
+                    </a>
+                    <a href="Layer 2 Issue 1/L2_Data_Link_Layer_VLAN_Issue.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+            
+
+            <div id="l22" class="issue-card">
+                <div class="layer-badge">LAYER 2</div>
+                <h2 class="issue-title">GSBWiFi: Single Device Restriction via MAC-Based Access</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>I am currently staying in a government dormitory reported that I could only connect one device to the Wi-Fi network at a time. After logging in with my credentials on my phone, trying to connect with my PC  would result in either a redirect loop or full denial of access. The strange part? Even though my both devices used the same username and password, only the first device could use the network.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>Upon closer analysis, it became evident that the dormitory network uses MAC address filtering at Layer 2, most likely combined with sticky port security on access switches or MAC-based RADIUS authentication. Once a user logs in, their MAC address is associated with their credentials, and only that MAC is whitelisted for future access. This prevents account sharing and enforces a one-device-per-user policy. </p>
+                </div>
+                <div align="center">
+                <img src="Layer 2 Issue 2/loginpageerror.png" alt="GSBWiFi Error" class="issue-image" style="max-width: 400px;"></div>
+
+                <div class="download-section">
+                    <a href="Layer 2 Issue 2/L2_MAC_Filtering_Sticky_Security_Issue.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 2 Issue 2/L2_MAC_Filtering_Sticky_Security_Issue.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            <div id="l3" class="issue-card">
+                <div class="layer-badge">LAYER 3</div>
+                <h2 class="issue-title">Other Players Cannot Join the Lobby Due to Player Connecting to the Game via VPN</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>I was talking to my friend who is currently an intern at a gaming company recently and he told me the following: "We are currently working on a game using the host client approach. If one of the players connects to the game using a VPN, the other player cannot connect to the lobby. While researching how to solve this, I remembered my networking class."</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>To solve this problem, I designed a Cisco-based network to show why VPN users could not theoretically establish a printer. It was necessary to detect that the VPN output behind NAT was forced to provide a direct connection and that this could be due to lack of port forwarding or access control lists (ACL). As a solution, it was configured to allow configuration information with port forwarding settings and ACL over NAT. This scenario aims to solve the problems of a player with VPN in a host-client gaming architecture at the network level.</p>
+                </div>
+                <div align="center">
+                    <img src="Layer 3 Issue 1/gamescreen.jpeg" alt="Damaged Ethernet Cable" class="issue-image" style="max-width: 500px;"> </div>
+    
+
+                <div class="download-section">
+                    <a href="Layer 3 Issue 1/L3_NAT_ACL_Misconfiguration.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                   
+                    <a href="Layer 3 Issue 1/L3_NAT_ACL_Misconfiguration.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            <div id="l32" class="issue-card">
+                <div class="layer-badge">LAYER 3</div>
+                <h2 class="issue-title">Different Network Protocol Incompatibility</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>A company has two different office networks:
+                        Accounting and Administration Office
+                        The company's DHCP server is only located in the Accounting Office. However, when a new employee connects his computer to the Administration Office, the device cannot access the Internet and cannot obtain an IP address.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>Since the DHCP server was located in a different network, DHCP requests from clients could not reach this server. To solve this problem, the IP address of the DHCP server was defined on the router interface on the client's network using the ip helper-address command. Thus, the router started to forward DHCP Discover packets as unicast to the DHCP server and the client was able to automatically obtain an IP address.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 3 Issue 2/L3_DHCP_RLAY_Helper.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 3 Issue 2/L3_DHCP_Relay_Agent_Misconfiguration.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            <div id="l4" class="issue-card">
+                <div class="layer-badge">LAYER 4</div>
+                <h2 class="issue-title">Dormitory Printer Crashed Due to UDP Flood</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>While staying in a government dormitory last year, we had a shared network printer connected via Ethernet through a central switch. All the students in the dorm could send print jobs to it from their rooms over the internal network. Everything worked fine—until one day the printer stopped responding completely. At first, I thought it was just a random printer error. But after talking to a few friends, I realized no one was able to print anything. The printer wasn’t even acknowledging jobs. Eventually, a dorm technician came in and had to restart the printer manually to get it working again.
+                        </p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>Later, I discovered that the issue might have been caused by one of the students unknowingly downloading a modded game file that included hidden malware. The infected device began flooding the printer with random UDP packets. Since many printers listen on open UDP ports (like 161 for SNMP or 9100 for raw printing), this flood overwhelmed the printer’s network interface, causing it to freeze or crash entirely.
+
+This experience taught me how easily a simple UDP flood could bring down a critical shared device in a local network—and how something as innocent as a game mod could be a vehicle for a denial-of-service incident.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 4 Issue 1/L4_UDP_Flood.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 4 Issue 1/L4_UDP_Flood.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            
+
+            <div id="l5" class="issue-card">
+                <div class="layer-badge">LAYER 5</div>
+                <h2 class="issue-title">Session Synchronization Failures</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>I connect to Router1 using the telnet 192.168.1.1 command from PC0. I successfully enter the password and access the session. However, after logging in, I wait about 1 minute without typing any commands. After this waiting period, the following error message appears on the screen: [Connection to 192.168.1.1 closed by foreign host]</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>By completely removing the timeout, the Telnet session was allowed to remain open permanently.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 5 Issue 1/L5_SessionLayer_Telnet_Failure.pkt" download class="download-btn">
+                        📥 Failure Scenario .pkt file
+                    </a>
+                    <a href="Layer 5 Issue 1/L5_SessionLayer_Telnet_Success.pkt" download class="download-btn">
+                        📥 Success Scenario .pkt file
+                    </a>
+                    <a href="Layer 5 Issue 1/L5_Telnet.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            <div id="l62" class="issue-card">
+                <div class="layer-badge">LAYER 6</div>
+                <h2 class="issue-title">Wi-Fi Encryption Incompatibility</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>The other day I went to a friend's house with my laptop. 
+                        I wanted to use the internet connection at his house and connected to the Wi-Fi network without any problems. However, when my friend turned on his old computer and wanted to connect to the internet, the computer could not see the Wi-Fi network or kept giving an error when trying to connect.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>In this scenario, the encryption mismatch issue my friend experienced is resolved by downgrading the router's wireless security settings to a protocol that the old device also supports, or by configuring it in a mixed mode. In real life, this usually means downgrading the Wi-Fi encryption type from WPA2 to WPA/WPA2 mixed mode, or in rare cases, to WPA.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 6 Issue 1/L6_OldDevice_Wi-Fi_Encryption_Incompatibility.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 6 Issue 1/L6_OldDevice_Wi-Fi_Encryption_Incompatibility.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+
+            <div id="l7" class="issue-card">
+                <div class="layer-badge">LAYER 7</div>
+                <h2 class="issue-title">The Threat of DNS Spoofing in Banking Applications</h2>
+                
+                <div class="problem-section">
+                    <div class="section-label">Problem</div>
+                    <p>The problem is that when a user (Victim PC) tries to access a sensitive website (www.bank.com) such as online banking, a malicious attacker (Attacker PC) intercepts this access request and redirects the user to a fake phishing site instead of the actual bank site.</p>
+                </div>
+
+                <div class="solution-section">
+                    <div class="section-label">Solution</div>
+                    <p>In order to develop a solution against this potential DNS Spoofing threat encountered in banking applications, it is first necessary to understand how the problem works at the network level. For this purpose, I designed and implemented a DNS Spoofing attack simulation using Cisco Packet Tracer.</p>
+                </div>
+
+                <div class="download-section">
+                    <a href="Layer 7 Issue 1/L7_DNS_Spoofing.pkt" download class="download-btn">
+                        📥 Download .pkt file
+                    </a>
+                    <a href="Layer 7 Issue 1/L7_DNS_Spoofing.pdf" target="_blank" class="download-btn pdf-btn">
+                        📄 Explanation (PDF)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Back to top button functionality
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Add loading animation delay
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.issue-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>
